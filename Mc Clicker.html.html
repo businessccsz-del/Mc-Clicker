@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mc Clicker - Burger Emoji Background</title>
+<style>
+:root{
+  --bg:#071028; --panel:#081926cc; --accent:#ffcc33; --muted:#9fb0c3; --glass: rgba(255,255,255,0.03); --glass-border: rgba(255,255,255,0.04); --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-sans);
+  color: #e8f3ff;
+  /* Burger emoji background with dark overlay */
+  background-color: #071028;
+  background-image: linear-gradient(rgba(7,16,40,0.7), rgba(7,16,40,0.7)), 
+                    repeating-linear-gradient(
+                      45deg,
+                      transparent,
+                      transparent 40px,
+                      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ctext y='32' font-size='32'%3E🍔%3C/text%3E%3C/svg%3E") 0 0
+                    );
+  background-size: 80px 80px;
+  background-repeat: repeat;
+}
+.app { max-width:1180px; margin:26px auto; padding:18px; display:grid; grid-template-columns: 1fr 380px; gap:18px; }
+.panel{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:14px; padding:16px; border:1px solid var(--glass-border); position:relative; overflow:hidden; box-shadow:0 12px 40px rgba(2,6,23,0.6); }
+header.game-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+header .title { font-size:20px; font-weight:800; display:flex; gap:10px; align-items:center; }
+.subtitle { font-size:12px; color:var(--muted); }
+.currency { text-align:center; margin:18px 0; }
+.currency .amount { font-size:48px; font-weight:900; color:var(--accent); text-shadow:0 6px 24px rgba(255,204,51,0.06); }
+.currency .persec { color:var(--muted); font-size:13px; margin-top:6px; }
+.click-wrap { display:flex; justify-content:center; align-items:center; margin:12px 0 20px 0; }
+#clicker {
+  width:230px; height:230px; border-radius:999px; display:flex; justify-content:center; align-items:center;
+  background: linear-gradient(180deg,#fff7e6,#fff2c9); border:6px solid rgba(255,255,255,0.12);
+  box-shadow: 0 18px 50px rgba(255,204,51,0.06), inset 0 -4px 18px rgba(0,0,0,0.12);
+  cursor:pointer; transition:transform .06s ease; position:relative; user-select:none;
+}
+#clicker:active{ transform:scale(0.98); }
+#clicker .center-icon { font-size:44px; font-weight:900; color:#482600; text-shadow:0 2px 0 rgba(255,255,255,0.6); }
+#clicker .small { font-size:14px; opacity:0.9; display:block; margin-top:6px; color:#5b3b00; }
+.shop { display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+.upgrade { display:flex; gap:12px; align-items:center; padding:10px; border-radius:12px; background:linear-gradient(180deg,var(--glass), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); }
+.upgrade .meta { flex:1; }
+.upgrade .meta .name { font-weight:800; }
+.upgrade .meta .desc { font-size:12px; color:var(--muted); margin-top:6px; }
+.upgrade .buy { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+.btn { background:linear-gradient(180deg,#ffd977,#ffbe2f); border:none; padding:8px 12px; border-radius:8px; font-weight:800; cursor:pointer; box-shadow:0 8px 20px rgba(255,204,51,0.12); }
+.btn.secondary { background:transparent; border:1px solid rgba(255,255,255,0.06); padding:6px 10px; color:var(--muted); box-shadow:none; font-weight:700; }
+.btn.red { background:linear-gradient(180deg,#ff6b6b,#ff4a4a); color:white; }
+.side { display:flex; flex-direction:column; gap:12px; }
+.card { padding:12px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); }
+.log { max-height:220px; overflow:auto; font-size:13px; color:var(--muted); padding-right:8px; }
+.controls { display:flex; gap:8px; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+.powerup { position:absolute; z-index:40; cursor:pointer; user-select:none; pointer-events:auto; }
+.active-buffs { display:flex; flex-direction:column; gap:6px; margin-top:8px; font-size:13px; color:var(--muted); }
+.rebirth-area { display:flex; gap:10px; align-items:center; justify-content:space-between; margin-top:10px; }
+.small-muted{ font-size:12px; color:var(--muted); }
+@media (max-width:980px){ .app{ grid-template-columns:1fr; padding:12px; } #clicker{ width:170px; height:170px; } }
+</style>
+</head>
+<body>
+<div class="app">
+<div class="panel" id="main-panel">
+<header class="game-head">
+<div class="title">
+<div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(180deg,#fff3cf,#ffd86a);display:flex;align-items:center;justify-content:center; font-weight:900;">🍔</div>
+<div><div>Mc Clicker</div><div class="subtitle">Click, upgrade, power-up, rebirth — get shiny.</div></div>
+</div>
+</header>
+<div class="currency">
+<div class="amount" id="money">0</div>
+<div class="persec" id="income">+0 / sec</div>
+</div>
+<div class="click-wrap">
+<div id="clicker" title="Click me!">
+<div style="text-align:center;">
+<div class="center-icon" id="click-icon">🍔</div>
+<div class="small" id="clickPowerLabel">+1</div>
+</div>
+</div>
+</div>
+<div class="shop card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+<div style="font-weight:900">Shop</div>
+<div style="font-size:12px;color:var(--muted)">Buy upgrades to speed progress</div>
+</div>
+<div class="shop" id="shop-list"></div>
+</div>
+<div class="card">
+<div style="display:flex;flex-direction:column;gap:8px">
+<div>Clicks: <strong id="stat-clicks">0</strong></div>
+<div>Lifetime Earned: <strong id="stat-earned">0</strong></div>
+<div>Best Click Power: <strong id="stat-bestclick">1</strong></div>
+<div>Auto Income: <strong id="stat-auto">0</strong> / sec</div>
+<div>Rebirth Points: <strong id="stat-rebirth">0</strong></div>
+</div>
+</div>
+<div class="card">
+<div class="controls">
+<button class="btn secondary" id="btn-reset">Soft Reset</button>
+</div>
+<div class="rebirth-area">
+<div style="flex:1">
+<div style="font-weight:800">Rebirth</div>
+<div class="small-muted" id="rebirth-desc">Reset progress to gain permanent power. Requires <strong id="rebirth-req">500,000</strong></div>
+<div style="margin-top:6px;font-size:13px;color:var(--muted)">Each Rebirth grants +25% base income permanently.</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+<div id="rebirth-info" style="font-weight:800">×1.00</div>
+<button class="btn red" id="btn-rebirth" title="Rebirth now">Rebirth</button>
+</div>
+</div>
+</div>
+<div class="card">
+<div style="font-weight:800;margin-bottom:8px">Activity Log</div>
+<div class="log" id="log"></div>
+</div>
+</div>
+</div>
+<script>
+const STORAGE_KEY='mc_clicker_v3';
+let state={money:0,totalEarned:0,clicks:0,upgrades:{},rebirthPoints:0,rebirthMultiplier:1,lastRebirthCost:500000,buffs:[],lastTick:Date.now()};
+
+const UPGRADE_BLUEPRINTS=[
+{id:'click1',name:'Click Power I',desc:'Increase each click by +1',price:(lvl)=>10+lvl*5,effect:(lvl)=>lvl*1,type:'manual'},
+{id:'click2',name:'Click Power II',desc:'Increase each click by +5',price:(lvl)=>50+lvl*25,effect:(lvl)=>lvl*5,type:'manual'},
+{id:'click3',name:'Click Power III',desc:'Increase each click by +25',price:(lvl)=>250+lvl*125,effect:(lvl)=>lvl*25,type:'manual'},
+{id:'click4',name:'Click Power IV',desc:'Increase each click by +100',price:(lvl)=>1000+lvl*500,effect:(lvl)=>lvl*100,type:'manual'},
+{id:'click5',name:'Click Power V',desc:'Increase each click by +500',price:(lvl)=>5000+lvl*2500,effect:(lvl)=>lvl*500,type:'manual'},
+{id:'auto1',name:'Auto Clicker I',desc:'Gives coins automatically',price:(lvl)=>50+lvl*25,effect:(lvl)=>lvl*1,type:'auto'},
+{id:'auto2',name:'Auto Clicker II',desc:'Faster auto income',price:(lvl)=>250+lvl*125,effect:(lvl)=>lvl*5,type:'auto'},
+{id:'auto3',name:'Auto Clicker III',desc:'Mega autos',price:(lvl)=>1000+lvl*500,effect:(lvl)=>lvl*25,type:'auto'},
+{id:'auto4',name:'Auto Clicker IV',desc:'Ultra autos',price:(lvl)=>5000+lvl*2500,effect:(lvl)=>lvl*100,type:'auto'},
+{id:'auto5',name:'Auto Clicker V',desc:'Insane autos',price:(lvl)=>25000+lvl*12500,effect:(lvl)=>lvl*500,type:'auto'}
+];
+
+function logEvent(txt){const log=document.getElementById('log');log.innerHTML=`<div>${txt}</div>`+log.innerHTML;}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+function load(){let s=localStorage.getItem(STORAGE_KEY);if(s){state=JSON.parse(s);}}
+function format(n){return n.toLocaleString();}
+function getClickPower(){let base=1; UPGRADE_BLUEPRINTS.filter(u=>u.type==='manual').forEach(u=>{base+=state.upgrades[u.id]?u.effect(state.upgrades[u.id]):0;}); return Math.floor(base*state.rebirthMultiplier);}
+function getAutoIncome(){let income=0; UPGRADE_BLUEPRINTS.filter(u=>u.type==='auto').forEach(u=>{income+=state.upgrades[u.id]?u.effect(state.upgrades[u.id]):0;}); return Math.floor(income*state.rebirthMultiplier);}
+function applyBuffs(){let total=1; state.buffs.forEach(b=>{if(Date.now()<b.expire) total*=b.mult;}); return total;}
+function render(){document.getElementById('money').textContent=format(state.money);
+document.getElementById('income').textContent='+'+format(getAutoIncome()*applyBuffs())+' / sec';
+document.getElementById('clickPowerLabel').textContent='+'+getClickPower();
+document.getElementById('stat-clicks').textContent=format(state.clicks);
+document.getElementById('stat-earned').textContent=format(state.totalEarned);
+document.getElementById('stat-bestclick').textContent=format(getClickPower());
+document.getElementById('stat-auto').textContent=format(getAutoIncome());
+document.getElementById('stat-rebirth').textContent=format(state.rebirthPoints);
+document.getElementById('rebirth-info').textContent='×'+state.rebirthMultiplier.toFixed(2);
+document.getElementById('rebirth-req').textContent=format(state.lastRebirthCost);
+const shop=document.getElementById('shop-list'); shop.innerHTML='';
+UPGRADE_BLUEPRINTS.forEach(u=>{let lvl=state.upgrades[u.id]||0; let price=u.price(lvl); let div=document.createElement('div'); div.className='upgrade'; div.innerHTML=`<div class="meta"><div class="name">${u.name} Lv.${lvl}</div><div class="desc">${u.desc}</div></div><div class="buy"><div>Cost: ${format(price)}</div><button class="btn" onclick="buyUpgrade('${u.id}')">Buy</button></div>`; shop.appendChild(div);});
+}
+
+document.getElementById('clicker').addEventListener('click',()=>{let gain=getClickPower()*applyBuffs(); state.money+=gain; state.totalEarned+=gain; state.clicks++; render(); save();});
+
+setInterval(()=>{let gain=getAutoIncome()*applyBuffs(); state.money+=gain; state.totalEarned+=gain; render(); save();},1000);
+
+function buyUpgrade(id){let u=UPGRADE_BLUEPRINTS.find(x=>x.id===id); let lvl=state.upgrades[id]||0; let price=u.price(lvl); if(state.money>=price){state.money-=price; state.upgrades[id]=lvl+1; logEvent(`Bought ${u.name} Lv.${lvl+1} for ${format(price)}`); render(); save();}}
+
+const POWERUPS=[{name:'Golden Burger',mult:2,duration:15,color:'#ffd700'},{name:'Double Click',mult:3,duration:10,color:'#ff7733'},{name:'Cash Rain',mult:1.5,duration:12,color:'#33ccff'}];
+function spawnPowerUp(){let pu=POWERUPS[Math.floor(Math.random()*POWERUPS.length)]; let div=document.createElement('div'); div.className='powerup'; div.textContent=pu.name; div.style.color=pu.color; div.style.top=(50+Math.random()*300)+'px'; div.style.left=(50+Math.random()*600)+'px'; document.body.appendChild(div); div.addEventListener('click',()=>{state.buffs.push({name:pu.name,mult:pu.mult,expire:Date.now()+pu.duration*1000}); logEvent(`Activated ${pu.name} buff! x${pu.mult} for ${pu.duration}s`); div.remove(); render(); save();}); setTimeout(()=>{if(div.parentNode) div.remove();},15000);}
+setInterval(spawnPowerUp,60000);
+
+document.getElementById('btn-rebirth').addEventListener('click',()=>{if(state.money>=state.lastRebirthCost){state.rebirthMultiplier+=0.25; state.rebirthPoints++; logEvent(`Rebirth! Multiplier now ×${state.rebirthMultiplier.toFixed(2)}`); state.money=0; state.upgrades={}; state.lastRebirthCost+=500000; render(); save();}});
+
+document.getElementById('btn-reset').addEventListener('click',()=>{if(confirm('Soft reset? All progress will be lost.')){state={money:0,totalEarned:0,clicks:0,upgrades:{},rebirthPoints:state.rebirthPoints,rebirthMultiplier:state.rebirthMultiplier,lastRebirthCost:state.lastRebirthCost,buffs:[],lastTick:Date.now()}; render(); save();}});
+
+load(); render();
+</script>
+</body>
+</html>
